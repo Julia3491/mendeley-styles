@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<style xmlns="http://purl.org/net/xbiblio/csl" version="1.0">
+  <info>
+    <title>ISO 690:2012 (Polski, autor-data)</title>
+    <id>http://www.example.com/iso-690-2012-pl</id>
+    <link href="http://www.example.com/iso-690-2012-pl" rel="self"/>
+    <author>
+      <name>Twoje Imię i Nazwisko</name>
+    </author>
+    <category citation-format="author-date"/>
+    <category field="generic-base"/>
+    <summary>Styl zgodny z normą ISO 690:2012, wykorzystujący system autor-data. Uwzględnia opisy książek, artykułów oraz stron internetowych, z polskimi etykietami.</summary>
+    <updated>2025-04-13</updated>
+  </info>
+
+  <!-- Makro dla autorów -->
+  <macro name="author">
+    <names variable="author">
+      <name and="text" delimiter=", " initialize-with=". "/>
+    </names>
+  </macro>
+
+  <!-- Makro dla daty wydania -->
+  <macro name="issued">
+    <date variable="issued">
+      <date-part name="year"/>
+    </date>
+  </macro>
+
+  <!-- Makro dla tytułu -->
+  <macro name="title">
+    <text variable="title" font-style="italic"/>
+  </macro>
+
+  <!-- Makro dla tytułu czasopisma lub serii -->
+  <macro name="container-title">
+    <text variable="container-title" font-style="italic"/>
+  </macro>
+
+  <!-- Makro dla dostępu online -->
+  <macro name="access">
+    <group delimiter=" ">
+      <text term="online" text-case="lowercase"/>
+      <date variable="accessed">
+        <date-part name="day" suffix="."/>
+        <date-part name="month" suffix="."/>
+        <date-part name="year"/>
+      </date>
+    </group>
+  </macro>
+
+  <!-- Układ bibliografii -->
+  <bibliography hanging-indent="true" line-spacing="2">
+    <sort>
+      <key macro="author"/>
+      <key macro="issued"/>
+    </sort>
+    <layout suffix=".">
+      <group delimiter=". ">
+        <!-- Numeracja pozycji (opcjonalnie, jeśli chcesz ją włączać do bibliografii) -->
+        <text variable="citation-number" prefix="[" suffix="] "/>
+        <!-- Autor i data -->
+        <choose>
+          <if variable="author">
+            <macro name="author"/>
+          </if>
+          <else>
+            <text value="Anonim"/>
+          </else>
+        </choose>
+        <text text=", "/>
+        <macro name="issued"/>
+        <text text=", "/>
+        <!-- W zależności od typu dokumentu -->
+        <choose>
+          <!-- Dla książek -->
+          <if type="book">
+            <group delimiter=". ">
+              <macro name="title"/>
+              <group delimiter=": ">
+                <text variable="publisher-place"/>
+                <text variable="publisher"/>
+              </group>
+              <text variable="issued" prefix=", "/>
+              <text variable="ISBN" prefix="ISBN "/>
+            </group>
+          </if>
+          <!-- Dla artykułów (w czasopismach, magazynach, gazetach) -->
+          <else-if type="article-journal article-magazine article-newspaper">
+            <group delimiter=". ">
+              <macro name="title"/>
+              <group delimiter=", ">
+                <macro name="container-title"/>
+                <text variable="volume" prefix="t. "/>
+                <text variable="issue" prefix="nr. "/>
+                <text variable="page" prefix="s. "/>
+              </group>
+              <group delimiter=" ">
+                <text variable="ISSN" prefix="ISSN "/>
+                <text variable="DOI" prefix="https://doi.org/"/>
+              </group>
+            </group>
+          </else-if>
+          <!-- Dla stron internetowych -->
+          <else-if type="webpage">
+            <group delimiter=". ">
+              <macro name="title"/>
+              <group delimiter=": ">
+                <text variable="URL" prefix="Dostępny w Internecie: "/>
+                <macro name="access" prefix="(dostęp: "/>
+                <text value=")"/>
+              </group>
+            </group>
+          </else-if>
+          <!-- Domyślny układ dla innych typów -->
+          <else>
+            <macro name="title"/>
+          </else>
+        </choose>
+      </group>
+    </layout>
+  </bibliography>
+
+  <!-- Układ cytowań w tekście -->
+  <citation>
+    <sort>
+      <key macro="author"/>
+      <key macro="issued"/>
+    </sort>
+    <layout prefix="(" suffix=")" delimiter=", ">
+      <choose>
+        <if variable="author">
+          <macro name="author"/>
+        </if>
+        <else>
+          <text value="Anonim"/>
+        </else>
+      </choose>
+      <text text=", "/>
+      <macro name="issued"/>
+    </layout>
+  </citation>
+</style>
